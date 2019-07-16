@@ -129,35 +129,6 @@ usersRouter
         })
     }
 
-    const passwordError = UsersService.validatePassword(user_password)
-
-    if (passwordError)
-      return res.status(400).json({
-        error: passwordError
-      })
-
-    //   UsersService.hashPassword(user_password)
-    //   .then(hashedPassword => {
-    //     userToUpdate = {
-    //       first_name,
-    //       last_name,
-    //       email,
-    //       user_password: hashedPassword,
-    //     }
-    //   })
-    //   .then(() => {
-    //     return UsersService.hasUserWithEmail(
-    //       req.app.get('db'),
-    //       email
-    //     )
-    //   })
-    //   .then(hasUserWithEmail => {
-    //     if(hasUserWithEmail){
-    //     return res.status(400).json({
-    //       error: 'An account with this email already exists'
-    //     })
-    //   }
-    //   else{
     UsersService.updateUser(
       req.app.get('db'),
       req.params.user_id,
@@ -169,7 +140,5 @@ usersRouter
           .end()
       })
       .catch(next)
-  //   }
-  // })
 })
 module.exports = usersRouter
