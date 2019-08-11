@@ -42,7 +42,7 @@ usersRouter
         error: passwordError
       })
 
-      UsersService.hashPassword(user_password)
+    UsersService.hashPassword(user_password)
       .then(hashedPassword => {
         newUser = {
           first_name,
@@ -58,18 +58,18 @@ usersRouter
         )
       })
       .then(hasUserWithEmail => {
-        if(hasUserWithEmail){
-        return res.status(400).json({
-          error: 'An account with this email already exists'
-        })
-      }
+        if (hasUserWithEmail) {
+          return res.status(400).json({
+            error: 'An account with this email already exists'
+          })
+        }
         else {
           UsersService.insertUser(
             req.app.get('db'),
             newUser
           )
             .then(user => {
-              
+
               return res
                 .status(201)
                 .location(path.posix.join(req.originalUrl, `/${user[0].id}`))
@@ -78,8 +78,8 @@ usersRouter
             .catch(next)
         }
       })
-  
-    
+
+
   })
 
 usersRouter
@@ -116,7 +116,7 @@ usersRouter
   })
   .patch(jsonParser, (req, res, next) => {
     const { first_name, last_name, email, user_password } = req.body
-    const userToUpdate = { first_name, last_name, email, user_password }
+    let userToUpdate = { first_name, last_name, email, user_password }
 
     const numberOfValues = Object.values(userToUpdate).filter(Boolean).length
     if (numberOfValues === 0) {
@@ -128,17 +128,73 @@ usersRouter
           }
         })
     }
-
-    UsersService.updateUser(
-      req.app.get('db'),
-      req.params.user_id,
-      userToUpdate
-    )
-      .then(numRowsAffected => {
-        res
-          .status(204)
-          .end()
-      })
-      .catch(next)
-})
+    if (user_password) {
+      UsersService.hashPassword(user_password)
+        .then(hashedPassword => {
+          userToUpdate = {
+            first_name,
+            last_name,
+            email,
+            user_password: hashedPassword,
+          }
+        })
+        .then(() => {
+          if (email) {
+            return UsersService.hasUserWithEmail(
+              req.app.get('db'),
+              email
+            )
+          }
+          else {
+            return false
+          }
+        })
+        .then(hasUserWithEmail => {
+          if (hasUserWithEmail) {
+            return res.status(400).json({
+              error: 'An account with this email already exists'
+            })
+          }
+          else {
+            UsersService.updateUser(
+              req.app.get('db'),
+              req.params.user_id,
+              newUser
+            )
+              .then(user => {
+                res
+                  .status(204)
+                  .end()
+              })
+              .catch(next)
+          }
+        })
+    }
+    else if (email) {
+      UsersService.hasUserWithEmail(
+        req.app.get('db'),
+        email
+      )
+        .then(hasUserWithEmail => {
+          if (hasUserWithEmail) {
+            return res.status(400).json({
+              error: 'An account with this email already exists'
+            })
+          }
+          else {
+            UsersService.updateUser(
+              req.app.get('db'),
+              req.params.user_id,
+              userToUpdate
+            )
+              .then(numRowsAffected => {
+                res
+                  .status(204)
+                  .end()
+              })
+              .catch(next)
+          }
+        })
+    }
+  })
 module.exports = usersRouter
