@@ -53,20 +53,20 @@ describe('Auth Endpoints', function(){
       })
     })
 
-    it(`responds 400 'invalid email or user_password' when bad email`, () => {
+    it(`responds 400 'Incorrect email' when bad email`, () => {
       const userInvalidEmail = { email: 'email-not', user_password: 'exists' }
       return supertest(app)
       .post('/api/auth/login')
       .send(userInvalidEmail)
-      .expect(400, { error: `Incorrect email or password` })
+      .expect(400, { error: `Incorrect email` })
     })
 
-    it(`responds 400 'invalid email or user_password' when bad user_password`, () => {
+    it(`responds 400 'Incorrect password' when bad user_password`, () => {
       const userInvalidPass = { email: testUser.email, user_password: 'incorrect'}
       return supertest(app)
       .post('/api/auth/login')
       .send(userInvalidPass)
-      .expect(400, { error: `Incorrect email or password` })
+      .expect(400, { error: `Incorrect password` })
     })
 
     it(`responds 200 and JWT auth token using secret when valid credentials`, () => {

@@ -196,5 +196,18 @@ usersRouter
           }
         })
     }
+    else{
+      UsersService.updateUser(
+        req.app.get('db'),
+        req.params.user_id,
+        userToUpdate
+      )
+        .then(numRowsAffected => {
+          res
+            .status(204)
+            .end()
+        })
+        .catch(next)
+    }
   })
 module.exports = usersRouter
