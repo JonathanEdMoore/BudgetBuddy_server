@@ -1,3 +1,37 @@
+# BudgetBuddy Server
+
+## Tech Stack 
+
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "date-fns": "^1.30.1",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "helmet": "^3.18.0",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.19.0",
+    "lodash": "^4.17.14",
+    "morgan": "^1.9.1",
+    "pg": "^7.11.0",
+    "xss": "^1.0.6"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.1",
+    "postgrator-cli": "^3.1.0",
+    "supertest": "^4.0.2"
+  }
+
+This app is written using Node.js and Express.
+
+Authentiation and user endpoints relies on jsonwebtoken and bcryptjs--with sanitization being handled by xss. 
+
+The database is written with the assitance of postgresql. 
+
+Testing frameworks used are; mocha, chai, and supertest. 
+
 # Express Boilerplate!
 
 This is a boilerplate project used for starting new projects!
